@@ -8,9 +8,7 @@ export default function PickEventType() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    api.eventTypes()
-      .then(setEventTypes)
-      .catch(() => {});
+    api.eventTypes().then(setEventTypes).catch(() => {});
   }, []);
 
   return (
@@ -18,17 +16,6 @@ export default function PickEventType() {
       <Navbar />
 
       <div className="container">
-
-        <div className="back-row">
-          <button
-            type="button"
-            className="back-btn"
-            onClick={() => navigate('/dashboard')}
-          >
-            ← Back to Dashboard
-          </button>
-        </div>
-
         <div className="pick-head">
           <h1>What are you celebrating?</h1>
           <p>Pick an event type to start building your invitation.</p>
@@ -63,27 +50,9 @@ export default function PickEventType() {
       </div>
 
       <style>{`
-        .back-row {
-          padding-top: 24px;
-        }
-
-        .back-btn {
-          border: none;
-          background: transparent;
-          color: var(--site-accent);
-          font-size: 0.9rem;
-          font-weight: 600;
-          cursor: pointer;
-          padding: 6px 0;
-        }
-
-        .back-btn:hover {
-          opacity: 0.7;
-        }
-
         .pick-head {
           text-align: center;
-          padding: 30px 0 34px;
+          padding: 50px 0 34px;
         }
 
         .pick-head h1 {

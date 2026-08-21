@@ -27,20 +27,16 @@ export default function CreateInvitation() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    api.eventTypes()
-      .then((all) => {
-        const c = all[eventType];
+    api.eventTypes().then((all) => {
+      const c = all[eventType];
 
-        if (!c) {
-          navigate('/create');
-          return;
-        }
-
-        setConfig(c);
-      })
-      .catch(() => {
+      if (!c) {
         navigate('/create');
-      });
+        return;
+      }
+
+      setConfig(c);
+    });
   }, [eventType, navigate]);
 
   async function handleSubmit(e) {
@@ -85,15 +81,15 @@ export default function CreateInvitation() {
 
       <div className="container form-wrap">
 
-        <div className="back-row">
-          <button
-            type="button"
-            className="back-btn"
-            onClick={() => navigate('/create')}
-          >
-            ← Back to Event Types
-          </button>
-        </div>
+        <button
+          type="button"
+          className="back-arrow"
+          onClick={() => navigate('/create')}
+          aria-label="Back to event types"
+          title="Back"
+        >
+          ←
+        </button>
 
         <div className="form-head">
           <span className="ic">
@@ -211,33 +207,38 @@ export default function CreateInvitation() {
       </div>
 
       <style>{`
-        .back-row {
-          padding-top: 24px;
-        }
-
-        .back-btn {
-          border: none;
-          background: transparent;
-          color: var(--site-accent);
-          font-size: 0.9rem;
-          font-weight: 600;
-          cursor: pointer;
-          padding: 6px 0;
-        }
-
-        .back-btn:hover {
-          opacity: 0.7;
-        }
-
         .form-wrap {
           padding-bottom: 70px;
+          position: relative;
+        }
+
+        .back-arrow {
+          margin-top: 24px;
+          width: 40px;
+          height: 40px;
+          border: 1px solid var(--site-line);
+          border-radius: 50%;
+          background: var(--site-card);
+          color: var(--site-accent);
+          font-size: 1.5rem;
+          line-height: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: background .18s ease, transform .18s ease;
+        }
+
+        .back-arrow:hover {
+          background: rgba(0, 0, 0, 0.04);
+          transform: translateX(-2px);
         }
 
         .form-head {
           display: flex;
           align-items: center;
           gap: 16px;
-          padding: 25px 0 30px;
+          padding: 24px 0 30px;
         }
 
         .form-head .ic {

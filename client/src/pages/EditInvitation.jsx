@@ -14,6 +14,7 @@ export default function EditInvitation() {
 
   const [invite, setInvite] = useState(null);
   const [config, setConfig] = useState(null);
+
   const [form, setForm] = useState({
     title: '',
     eventDate: '',
@@ -25,6 +26,7 @@ export default function EditInvitation() {
   const [venues, setVenues] = useState([]);
   const [photos, setPhotos] = useState([]);
   const [rsvps, setRsvps] = useState([]);
+
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -80,36 +82,47 @@ export default function EditInvitation() {
     }
   }
 
-  function copyLink() {
-    const url = `${window.location.origin}/i/${invite.slug}`;
+  function getShareUrl() {
+    return `https://eventinvite.onrender.com/i/${invite.slug}`;
+  }
 
-    navigator.clipboard.writeText(url);
+  async function copyLink() {
+    const url = getShareUrl();
 
-    alert('Link copied: ' + url);
+    try {
+      await navigator.clipboard.writeText(url);
+      alert('Invitation link copied!');
+    } catch (err) {
+      alert('Unable to copy the invitation link.');
+    }
   }
 
   async function shareInvitation() {
-    const url = `${window.location.origin}/i/${invite.slug}`;
+    const url = getShareUrl();
 
     if (navigator.share) {
       try {
         await navigator.share({
-          title: invite.title,
+          title: invite.title || 'EventInvite',
           text: `You're invited to ${invite.title}!`,
-          url
+          url: url
         });
       } catch (err) {
-        // User closed the share menu.
       }
-    } else {
-      try {
-        await navigator.clipboard.writeText(url);
-        alert(
-          'Sharing is not supported on this browser. Link copied instead.'
-        );
-      } catch (err) {
-        alert('Unable to share or copy the invitation link.');
-      }
+
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(url);
+
+      alert(
+        `Sharing is not supported on this browser.\n\nInvitation link copied:\n${url}`
+      );
+    } catch (err) {
+      alert(
+        `Unable to share the invitation.\n\nInvitation link:\n${url}`
+      );
     }
   }
 
@@ -123,7 +136,9 @@ export default function EditInvitation() {
           style={{ padding: 40 }}
         >
           {error ? (
-            <p className="error-banner">{error}</p>
+            <p className="error-banner">
+              {error}
+            </p>
           ) : (
             'Loading...'
           )}
@@ -132,7 +147,7 @@ export default function EditInvitation() {
     );
   }
 
-  const liveUrl = `${window.location.origin}/i/${invite.slug}`;
+  const liveUrl = getShareUrl();
 
   return (
     <div
@@ -146,11 +161,18 @@ export default function EditInvitation() {
       <div className="container form-wrap">
 
         <div className="form-head">
-          <span className="ic">{config.icon}</span>
+          <span className="ic">
+            {config.icon}
+          </span>
 
           <div>
-            <h1>Edit {invite.title}</h1>
-            <p>{config.label} invitation</p>
+            <h1>
+              Edit {invite.title}
+            </h1>
+
+            <p>
+              {config.label} invitation
+            </p>
           </div>
         </div>
 
@@ -192,7 +214,7 @@ export default function EditInvitation() {
               onClick={shareInvitation}
               type="button"
             >
-              Share
+              Share Invitation
             </button>
 
             <Link
@@ -260,7 +282,9 @@ export default function EditInvitation() {
           </div>
 
           <div className="form-card">
-            <h2>{config.scheduleTitle}</h2>
+            <h2>
+              {config.scheduleTitle}
+            </h2>
 
             <TimelineEditor
               items={timeline}
@@ -269,7 +293,9 @@ export default function EditInvitation() {
           </div>
 
           <div className="form-card">
-            <h2>{config.infoTitle}</h2>
+            <h2>
+              {config.infoTitle}
+            </h2>
 
             <VenueEditor
               items={venues}
@@ -449,7 +475,6 @@ export default function EditInvitation() {
           font-size: 0.82rem;
         }
 
-        /* Share button follows the selected event theme */
         .share-btn {
           background: var(--site-accent);
           color: #fff;
@@ -510,6 +535,7 @@ export default function EditInvitation() {
         }
 
         @media (max-width: 600px) {
+
           .share-actions {
             width: 100%;
           }
@@ -517,6 +543,7 @@ export default function EditInvitation() {
           .share-actions .btn {
             flex: 1;
           }
+
         }
 
       `}</style>
